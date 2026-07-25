@@ -1,4 +1,4 @@
-export const GITHUB_USERNAME = "kss2002";
+export const GITHUB_USERNAME = "Archibald1948";
 
 export const LANGUAGE_COLORS: Record<string, string> = {
   TypeScript: "#3178c6",
