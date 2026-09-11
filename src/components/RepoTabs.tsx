@@ -8,17 +8,27 @@ import { ActivityTab } from './ActivityTab';
 interface RepoTabsProps {
   username: string;
   repos: GitHubRepo[];
+  privateCount: number;
   starred: GitHubRepo[];
   events: GitHubEvent[];
 }
 
-export function RepoTabs({ username, repos, starred, events }: RepoTabsProps) {
+export function RepoTabs({
+  username,
+  repos,
+  privateCount,
+  starred,
+  events,
+}: RepoTabsProps) {
   return (
     <Tabs defaultValue="repos" className="w-full">
       <TabsList>
         <TabsTrigger value="repos">
           <BookMarked />
           레포지토리 ({repos.length})
+          {privateCount > 0 && (
+            <span className="text-muted-foreground">· 비공개 {privateCount}</span>
+          )}
         </TabsTrigger>
         <TabsTrigger value="starred">
           <Star />
