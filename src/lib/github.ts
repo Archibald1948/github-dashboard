@@ -63,6 +63,14 @@ export async function fetchRepos(): Promise<GitHubRepo[]> {
   return allRepos;
 }
 
+// Vercel 서버리스 함수(api/private-count.ts)를 통해 비공개 레포 개수만 받아온다.
+export async function fetchPrivateRepoCount(): Promise<number> {
+  const res = await fetch('/api/private-count');
+  if (!res.ok) throw new Error('Failed to fetch private repo count');
+  const { privateCount }: { privateCount: number } = await res.json();
+  return privateCount;
+}
+
 export async function fetchStarred(): Promise<GitHubRepo[]> {
   const allStarred: GitHubRepo[] = [];
   let page = 1;
