@@ -5,6 +5,7 @@ import {
   fetchRepos,
   fetchStarred,
   fetchPublicEvents,
+  fetchPrivateRepoCount,
 } from '@/lib/github';
 import { GITHUB_USERNAME } from '@/lib/constants';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -61,6 +62,7 @@ export default function App() {
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [starred, setStarred] = useState<GitHubRepo[]>([]);
   const [events, setEvents] = useState<GitHubEvent[]>([]);
+  const [privateCount, setPrivateCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -69,15 +71,18 @@ export default function App() {
   useEffect(() => {
     async function load() {
       try {
-        const [u, r, s] = await Promise.all([
+        const [u, r, s, p] = await Promise.all([
           fetchUser(),
           fetchRepos(),
           fetchStarred(),
+          // 서버리스 함수가 없는 로컬 vite dev 등에서는 공개 레포 수만 표시
+          fetchPrivateRepoCount().catch(() => 0),
         ]);
         const e = await fetchPublicEvents().catch(() => []);
         setUser(u);
         setRepos(r);
         setStarred(s);
+        setPrivateCount(p);
         setEvents(e);
       } catch (e) {
         setError(
@@ -117,7 +122,7 @@ export default function App() {
         {user && (
           <ProfileHeader
             user={user}
-            repoCount={repos.length}
+            repoCount={repos.length + privateCount}
             starredCount={starred.length}
           />
         )}
@@ -132,6 +137,7 @@ export default function App() {
         <RepoTabs
           username={user?.login ?? GITHUB_USERNAME}
           repos={filteredRepos}
+          privateCount={privateCount}
           starred={filteredStarred}
           events={events}
         />
