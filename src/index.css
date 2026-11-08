@@ -3,7 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/geist';
 
-/* 토스페이스 폰트 클래스 정의 */
+/* 토스페이스 정의 */
 .font-tossface {
   font-family: 'Tossface';
 }
